@@ -1,12 +1,14 @@
 import { mkdirSync } from 'node:fs'
-import { dirname, join } from 'node:path'
+import { join } from 'node:path'
 import Database from 'better-sqlite3'
 import { fileURLToPath } from 'node:url'
 
-const dataDirectory = fileURLToPath(new URL('../data/', import.meta.url))
+const dataDirectory = process.env.VERCEL
+  ? '/tmp/focuslock'
+  : fileURLToPath(new URL('../data/', import.meta.url))
 mkdirSync(dataDirectory, { recursive: true })
 
-const databasePath = join(dirname(dataDirectory), 'data', 'focuslock.db')
+const databasePath = join(dataDirectory, 'focuslock.db')
 const db = new Database(databasePath)
 
 db.pragma('foreign_keys = ON')
